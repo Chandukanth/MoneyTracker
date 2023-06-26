@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import TextInput from "../../components/TextInput";
 import { useForm } from "react-hook-form";
@@ -9,9 +9,18 @@ import AsyncStorage from "../../helper/AsyncStorage";
 import AsyncStorageObject from "../../lib/AsyncStorage";
 
 const LoginForm = () => {
+    const navigation = useNavigation()
+
+    useEffect(() => {
+        (async () => {
+            const sessionToken = await AsyncStorageObject.getItem(AsyncStorage.SESSION_TOKEN)
+            if (sessionToken) {
+                navigation.navigate("Dashboard");
+            }
+        })();
+    }, []);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigation = useNavigation()
 
     const {
         control,
@@ -22,11 +31,15 @@ const LoginForm = () => {
     const handleLogin = () => {
         let data = { email: email.toLowerCase(), password: password };
         apiClient.post(`${endpoints().userAPI}/login`, data, async (err, response) => {
-            if (response.data) {
+            if (response && response.data) {
                 await AsyncStorageObject.setItem(AsyncStorage.EMAIL, response.data.email)
                 await AsyncStorageObject.setItem(AsyncStorage.PHONENUMBER, response.data.phoneNumber)
                 await AsyncStorageObject.setItem(AsyncStorage.USERNAME, response.data.fullName)
+                await AsyncStorageObject.setItem(AsyncStorage.SESSION_TOKEN, response.data.session_id)
+                await AsyncStorageObject.setItem(AsyncStorage.USER_ID, response.data.id.toString())
                 navigation.navigate("Dashboard")
+                setEmail("")
+                setPassword("")
             }
         });
     };

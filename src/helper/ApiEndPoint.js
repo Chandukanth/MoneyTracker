@@ -8,5 +8,6 @@ const appApi = (path) => {
 
 // API call routes
 export const endpoints = () => ({
-    userAPI: appApi("user/v1")
+    userAPI: appApi("user/v1"),
+    salaryAPI: appApi("v1/salary")
 });

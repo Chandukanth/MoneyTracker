@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Layout from '../../components/Layout';
 
 const DashBoard = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Welcome to MoneyTracker!</Text>
-    </View>
+    <Layout
+    title={"Dashboard"}
+    >
+      <View style={styles.container}>
+        <Text style={styles.text}>Welcome to MoneyTracker!</Text>
+      </View>
+    </Layout>
   );
 };
 

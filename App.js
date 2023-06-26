@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Login from './src/views/Login/Login';
 import SignUpForm from './src/views/Login/SignUp';
 import DashBoard from './src/views/DashBoard';
+import SalaryForm from './src/views/salary';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -23,6 +24,9 @@ const App = () => {
 
           {/* DashBoard */}
           <Stack.Screen name="Dashboard" component={DashBoard} />
+
+          {/* Salary */}
+          <Stack.Screen name="Salary" component={SalaryForm} />
 
         </Stack.Navigator>
       </NavigationContainer>

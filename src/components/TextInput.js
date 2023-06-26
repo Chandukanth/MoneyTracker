@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, TextInput as RNTextInput } from "react-native";
 import { Controller } from 'react-hook-form';
 
-const TextInput = ({ control, name, placeholder, secureTextEntry, onChangeText, keyboardType }) => {
+const TextInput = ({ control, name, placeholder, secureTextEntry, onChangeText, keyboardType, values }) => {
     return (
         <View style={{ paddingVertical: 10 }}>
             <Controller
@@ -18,7 +18,7 @@ const TextInput = ({ control, name, placeholder, secureTextEntry, onChangeText, 
                                 onChangeText && onChangeText(e)
                             }}
                             onBlur={onBlur}
-                            value={value}
+                            value={value || values}
                             placeholder={placeholder}
                             keyboardType={keyboardType ? keyboardType :"default"}
                             secureTextEntry={secureTextEntry}
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     input: {
         color: "black",
         height: 50,
-        width: "100%",
         padding: 10,
         borderWidth: 1,
         borderRadius: 5,
