@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import BottomToolbar from './BottomToolBar';
-import SideMenu from 'react-native-side-menu';
-import NavigationDrawer from './navigationDrawer';
-
+import Menu from './navigationDrawer';
 
 const Layout = ({ children, title, FooterContent }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const updateMenuState = () => {
-        setIsOpen(!isOpen);
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
     };
-
-    //   const Menu = (
-    //     <NavigationDrawer updateMenuState={updateMenuState} />
-    //   );
 
     return (
         <>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>{title}</Text>
+                    <TouchableOpacity onPress={toggleSidebar}>
+                        <Text style={styles.headerText}>{title}</Text>
+                    </TouchableOpacity>
                 </View>
-                <SideMenu
 
-                    isOpen={isOpen}
-                    onChange={(isOpen) => setIsOpen(isOpen)}
-                    menuPosition="left"
-                >
-                    <View style={styles.content}>{children}</View>
-                </SideMenu>
+                <View style={styles.content}>{children}</View>
+
                 <View style={styles.footer}>{FooterContent}</View>
+
+                {sidebarOpen && (
+                    <View style={styles.sidebar}>
+                        {/* Sidebar content goes here */}
+                        <Menu />
+                    </View>
+                )}
             </View>
-            <BottomToolbar updateMenuState={updateMenuState} />
+
+            <BottomToolbar updateMenuState={toggleSidebar} />
         </>
     );
 };
@@ -67,14 +66,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    footerText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    menu: {
-        flex: 1,
+    sidebar: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 250, // Customize the height of the sidebar as needed
+        backgroundColor: '#fff',
         padding: 20,
-        // Customize the menu styles as needed
+        borderTopWidth: 1,
+        borderTopColor: 'lightgray',
+        zIndex: 1, // Ensure the sidebar is displayed above other content
     },
 });
 
