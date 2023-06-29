@@ -34,8 +34,8 @@ const Layout = ({ children, title, FooterContent, bottomToolBar, showBackIcon })
                 </View>
 
                 <View style={styles.content}>{children}</View>
-
-                <View style={styles.footer}>{FooterContent}</View>
+                {FooterContent &&
+                    <View style={styles.footer}>{FooterContent}</View>}
 
                 {sidebarOpen && (
                     <View style={styles.sidebar}>
@@ -44,7 +44,7 @@ const Layout = ({ children, title, FooterContent, bottomToolBar, showBackIcon })
                     </View>
                 )}
             </View>
-            {bottomToolBar && <BottomToolbar updateMenuState={toggleSidebar} setSidebarOpen={setSidebarOpen}/>}
+            {bottomToolBar && <BottomToolbar updateMenuState={toggleSidebar} setSidebarOpen={setSidebarOpen} />}
         </>
     );
 };
@@ -52,6 +52,8 @@ const Layout = ({ children, title, FooterContent, bottomToolBar, showBackIcon })
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        overflow: 'scroll',
+        backgroundColor: '#fff',
     },
     header: {
         flexDirection: 'row',
@@ -68,9 +70,6 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     footer: {
         backgroundColor: '#f2f2f2',

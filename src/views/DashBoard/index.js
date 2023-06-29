@@ -5,22 +5,37 @@ import apiClient from '../../apiClient';
 import { endpoints } from '../../helper/ApiEndPoint';
 import AsyncStorageObject from '../../lib/AsyncStorage';
 import AsyncStorage from '../../helper/AsyncStorage';
+import { format, endOfDay } from 'date-fns';
+import AnimatedGirlDoll from '../../components/AnimatedGirlDoll';
 
 const DashBoard = () => {
-  const [detail, setDetail] = useState("")
+  const [detail, setDetail] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [userName, setUserName] = useState("");
+
+  const remainingAmount = detail?.remaining_amount - totalAmount;
 
   useEffect(() => {
     getDetails();
-  }, [])
+  }, []);
 
   const getDetails = async () => {
-    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID)
+    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID);
+    const userName = await AsyncStorageObject.getItem(AsyncStorage.USERNAME);
+    setUserName(userName)
+
     apiClient.get(`${endpoints().salaryAPI}/${userId}`, async (error, response) => {
       if (response && response.data) {
-        setDetail(response.data)
+        setDetail(response.data);
       }
-    })
-  }
+    });
+    apiClient.get(`${endpoints().reportAPI}/search?today=true&object_id=${userId}`, async (error, response) => {
+      if (response && response.data && response.data.totalAmount) {
+        setTotalAmount(response.data.totalAmount);
+      }
+    });
+  };
+
   return (
     <Layout
       title={"Dashboard"}
@@ -28,7 +43,10 @@ const DashBoard = () => {
       bottomToolBar={true}
     >
       <View style={styles.container}>
-        <Text style={styles.text}>Welcome to MoneyTracker!</Text>
+        <Text style={styles.text}>Welcome to MoneyTracker {userName}!</Text>
+        <Text style={styles.amountText}>
+           Your possible remaining amount is: ₹{remainingAmount}
+        </Text>
       </View>
     </Layout>
   );
@@ -41,8 +59,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  amountText: {
+    fontSize: 14,
+    marginBottom: 20,
   },
 });
 
