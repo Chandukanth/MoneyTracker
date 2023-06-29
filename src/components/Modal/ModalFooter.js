@@ -7,7 +7,7 @@ const ModalFooter = ({toggle, button1Label, button1Press, button2Label, button2P
     return (
         <View style={styles.modalFooter}>
         <View style={{ flex: 1, flexDirection: "row" }}>
-            <TouchableOpacity style={{ flex: 1, backgroundColor: Color.PRIMARY, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
+            <TouchableOpacity style={{ flex: 1, backgroundColor: Color.COMPLETE, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
                 toggle && toggle();
                 button1Press && button1Press();
             }}>

@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import BottomToolbar from './BottomToolBar';
 import Menu from './navigationDrawer';
+import { useNavigation } from '@react-navigation/native';
 
-const Layout = ({ children, title, FooterContent }) => {
+const Layout = ({ children, title, FooterContent, bottomToolBar, showBackIcon }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const navigation = useNavigation()
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
+    };
+
+    const handleBackPress = () => {
+        navigation.goBack()
     };
 
     return (
         <>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={toggleSidebar}>
+                    {showBackIcon ? (
+                        <TouchableOpacity onPress={handleBackPress}>
+                            <Ionicons style={{ paddingBottom: '8%', paddingRight: 15 }} name="arrow-back" size={24} color="black" />
+                        </TouchableOpacity>
+                    ) : (<TouchableOpacity onPress={toggleSidebar}>
+                        <Ionicons style={{ paddingBottom: '8%', paddingRight: 15 }} name="menu" size={24} color="black" />
+                    </TouchableOpacity>)}
+                    <TouchableOpacity>
                         <Text style={styles.headerText}>{title}</Text>
                     </TouchableOpacity>
                 </View>
@@ -30,8 +44,7 @@ const Layout = ({ children, title, FooterContent }) => {
                     </View>
                 )}
             </View>
-
-            <BottomToolbar updateMenuState={toggleSidebar} />
+            {bottomToolBar && <BottomToolbar updateMenuState={toggleSidebar} setSidebarOpen={setSidebarOpen}/>}
         </>
     );
 };
@@ -42,7 +55,6 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#add8e6',
         paddingTop: '15%',
@@ -71,7 +83,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 250, // Customize the height of the sidebar as needed
+        height: 150, // Customize the height of the sidebar as needed
         backgroundColor: '#fff',
         padding: 20,
         borderTopWidth: 1,

@@ -9,20 +9,21 @@ import { endpoints } from "../../helper/ApiEndPoint";
 import AsyncStorageObject from "../../lib/AsyncStorage";
 import AsyncStorage from "../../helper/AsyncStorage";
 
-const ReportModal = ({ title, name, onPress, setAmount, amount, setDescription, description }) => {
+
+const Menu = () => {
+  const navigation = useNavigation();
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-
-
   const openPopup = () => {
     setShowPopup(true);
   };
-
   const closePopup = () => {
     setShowPopup(false);
   };
 
   const modalHeader = (
-    <Text style={styles.popupTitle}>Report Details - {title}</Text>
+    <Text style={styles.popupTitle}>Daily Update </Text>
   )
   const modalFooter = (
     <View style={styles.modalFooter}>
@@ -30,7 +31,6 @@ const ReportModal = ({ title, name, onPress, setAmount, amount, setDescription, 
       <View style={{ flexDirection: "row", flex: 1 }}>
 
         <TouchableOpacity style={{ flex: 1, alignItems: 'center', backgroundColor: Color.PRIMARY, justifyContent: 'center', borderBottomLeftRadius: 5 }} onPress={() => {
-          closePopup()
           onPress()
 
         }}>
@@ -66,18 +66,44 @@ const ReportModal = ({ title, name, onPress, setAmount, amount, setDescription, 
     </View>
   )
 
+  const handleSave = async () => {
+    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID)
+    let data = {
+      amount: amount,
+      description: description,
+      object_name: "DAILY",
+      object_id: userId,
+      userId: userId
+    }
+    apiClient.post(`${endpoints().reportAPI}/create`, data, async (error, response) => {
+      setShowPopup(false)
+      setDescription("")
+      setAmount("")
+    })
+  };
+
   return (
-    <>
-      <TouchableOpacity onPress={openPopup}>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => openPopup()}>
         <View style={styles.menuItem}>
-          <Ionicons name={name} size={24} color="black" />
-          <Text style={styles.menuItemText}>{title}</Text>
+          <Ionicons name="md-checkbox-sharp" size={24} color="black" />
+          <Text style={styles.menuItemText}>Daily Update</Text>
         </View>
       </TouchableOpacity>
-
-
+      <TouchableOpacity onPress={() => navigation.navigate("WeeklyReport")}>
+        <View style={styles.menuItem}>
+          <Ionicons name="stats-chart-sharp" size={24} color="black" />
+          <Text style={styles.menuItemText}>Weekly Report</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <View style={styles.menuItem}>
+          <Ionicons name="log-out" size={24} color="black" />
+          <Text style={styles.menuItemText}>Logout</Text>
+        </View>
+      </TouchableOpacity>
       <Modal
-        title={title}
+        title={"Daily Update"}
         modalHeader={modalHeader}
         modalBody={modalBody}
         modalFooter={modalFooter}
@@ -85,69 +111,12 @@ const ReportModal = ({ title, name, onPress, setAmount, amount, setDescription, 
         modalVisible={showPopup}
         button1Label={"Update"}
         button1Press={() => {
-          onPress()
+          handleSave()
           closePopup()
         }}
         button2Label={"Cancel"}
         button2Press={() => closePopup()}
       />
-    </>
-  );
-};
-
-const Menu = () => {
-  const navigation = useNavigation();
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-
-  const handleSave = async () => {
-    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID)
-    let data = {
-      amount: amount,
-      description: description,
-      object_name: "DAILY",
-      object_id: userId
-    }
-    apiClient.post(`${endpoints().reportAPI}/create`, data, async (error, response) => {
-
-    })
-  };
-  const weeklySave = async () => {
-    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID)
-    let data = {
-      amount: amount,
-      description: description,
-      object_name: "WEEKLY",
-      object_id: userId
-    }
-    apiClient.post(`${endpoints().reportAPI}/create`, data, async (error, response) => {
-
-    })
-  };
-  const monthlySave = async () => {
-    const userId = await AsyncStorageObject.getItem(AsyncStorage.USER_ID)
-    let data = {
-      amount: amount,
-      description: description,
-      object_name: "MONTHLY",
-      object_id: userId
-    }
-    apiClient.post(`${endpoints().reportAPI}/create`, data, async (error, response) => {
-
-    })
-  };
-
-  return (
-    <View style={styles.container}>
-      <ReportModal setAmount={setAmount} amount={amount} setDescription={setDescription} description={description} onPress={handleSave} name={"md-checkbox-sharp"} title="Daily Report" />
-      <ReportModal setAmount={setAmount} amount={amount} onPress={weeklySave} name="stats-chart-sharp" title="Weekly Report" />
-      <ReportModal setAmount={setAmount} amount={amount} onPress={monthlySave} name={"sync-circle-outline"} title="Monthly Report" />
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <View style={styles.menuItem}>
-          <Ionicons name="log-out" size={24} color="black" />
-          <Text style={styles.menuItemText}>Logout</Text>
-        </View>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -155,11 +124,14 @@ const Menu = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center', // Center the items horizontally
+    justifyContent: 'center', // Center the items vertically
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
+    marginBottom: 10, // Add some vertical spacing between menu items
   },
   menuItemText: {
     marginLeft: 12,
@@ -204,5 +176,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
 });
+
 
 export default Menu;

@@ -6,6 +6,7 @@ import Login from './src/views/Login/Login';
 import SignUpForm from './src/views/Login/SignUp';
 import DashBoard from './src/views/DashBoard';
 import SalaryForm from './src/views/salary';
+import WeeklyReport from './src/views/DashBoard/weekly';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -27,6 +28,9 @@ const App = () => {
 
           {/* Salary */}
           <Stack.Screen name="Salary" component={SalaryForm} />
+
+          {/* Report */}
+          <Stack.Screen name="WeeklyReport" component={WeeklyReport} />
 
         </Stack.Navigator>
       </NavigationContainer>

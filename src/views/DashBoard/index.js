@@ -25,6 +25,7 @@ const DashBoard = () => {
     <Layout
       title={"Dashboard"}
       sidebarOpen={true}
+      bottomToolBar={true}
     >
       <View style={styles.container}>
         <Text style={styles.text}>Welcome to MoneyTracker!</Text>

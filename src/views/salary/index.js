@@ -49,6 +49,7 @@ const SalaryForm = () => {
     return (
         <Layout
             title={"Salary"}
+            bottomToolBar
         >
             <View style={{ width: '100%' }}>
                 <TextInput

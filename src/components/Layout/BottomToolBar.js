@@ -3,17 +3,23 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const BottomToolbar = ({updateMenuState}) => {
-    const navigation = useNavigation()
+const BottomToolbar = ({ updateMenuState, setSidebarOpen }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.toolbar}>
       <TouchableOpacity onPress={() => updateMenuState()}>
         <Ionicons name="menu" size={24} color="black" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Salary")}>
+      <TouchableOpacity onPress={() => {
+        setSidebarOpen(false)
+        navigation.navigate("Salary")
+      }}>
         <Ionicons name="md-receipt" size={24} color="black" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
+      <TouchableOpacity onPress={() => {
+        setSidebarOpen(false)
+        navigation.navigate("Dashboard")
+      }}>
         <Ionicons name="home" size={24} color="black" />
       </TouchableOpacity>
     </View>
